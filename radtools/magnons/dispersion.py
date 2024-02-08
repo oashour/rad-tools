@@ -85,6 +85,7 @@ class MagnonDispersion:
         nodmi=False,
         noaniso=False,
         custom_mask=None,
+        phase_convention="default",
     ):
         self._C = None
         # Store the exchange model, but privately
@@ -115,7 +116,7 @@ class MagnonDispersion:
             self.indices_j,
             self.dis_vectors,
         ) = self._model.input_for_magnons(
-            nodmi=nodmi, noaniso=noaniso, custom_mask=custom_mask
+            nodmi=nodmi, noaniso=noaniso, custom_mask=custom_mask, phase_convention=phase_convention
         )
 
         # Initialize spin vector, u vector and v vector arrays

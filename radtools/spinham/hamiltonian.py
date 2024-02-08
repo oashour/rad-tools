@@ -977,7 +977,9 @@ class SpinHamiltonian(Crystal):
             energy = energy[0]
         return energy
 
-    def input_for_magnons(self, nodmi=False, noaniso=False, custom_mask=None):
+    def input_for_magnons(
+        self, nodmi=False, noaniso=False, custom_mask=None, phase_convention="default"
+    ):
         r"""
         Input from the spin Hamiltonian.
 
@@ -1020,7 +1022,19 @@ class SpinHamiltonian(Crystal):
             Jij.append(result)
             i.append(atom_index[atom1])
             j.append(atom_index[atom2])
-            dij.append(self.get_vector(atom1, atom1, R))
+            if phase_convention == "default":
+                dij.append(self.get_vector(atom1, atom1, R))
+            elif phase_convention == "tanner":
+                # This uses the phase convention in the Magnon-DM paper
+                # Where b_{jk} = \sum_k exp(i * x_{lj}) b_{lj}
+                # Instead of SpinW, where
+                # b_{jk} = \sum_k exp(i * x_{l}) b_{lj}
+                dij.append(self.get_vector(atom1, atom2, R))
+            else:
+                raise ValueError(
+                    "phase_convention has to be either 'default' or 'tanner', "
+                    + f"got: {phase_convention}"
+                )
 
         return Jij, i, j, dij
 
